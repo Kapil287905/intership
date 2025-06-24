@@ -1,0 +1,42 @@
+/* You can add any custom styles here if needed.
+   For example, if you want to adjust icon sizes or spacing further. */
+
+/* Basic styling for the fixed sidebar on large screens */
+.sidebar {
+    /* Ensures the sidebar is at the top left */
+    z-index: 1000; /* Ensure it's above other content if necessary */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Optional shadow */
+}
+
+.offcanvas.show:not(.hiding), .offcanvas.showing {
+    transform: none;
+    width: 90%;
+}
+
+/* Adjustments for offcanvas colors/text if desired */
+.offcanvas.bg-dark {
+    background-color: #343a40 !important; /* Dark background */
+}
+
+.offcanvas.bg-dark .offcanvas-header,
+.offcanvas.bg-dark .offcanvas-body {
+    color: #fff !important; /* White text */
+}
+
+.offcanvas.bg-dark .btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%); /* Makes the close button white */
+}
+
+/* Ensure links in offcanvas are styled similarly to the main sidebar */
+.offcanvas .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.offcanvas .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
