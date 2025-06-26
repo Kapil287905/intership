@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import Sidebar from './sidebar';
+import Sidebar from './Sidebar';
 import DepartmentList from './components/DepartmentList';
 import DepartmentForm from './components/DepartmentForm';
 import './index.css';

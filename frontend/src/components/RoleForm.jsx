@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:8000/api/role/'
+const API_URL = 'https://intership.pythonanywhere.com/api/role/'
 
 const RoleFormPage = () => {
   const [role, setRole] = useState('');
