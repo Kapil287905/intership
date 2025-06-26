@@ -27,8 +27,20 @@ const DepartmentListPage = () => {
   }, [])
 
   const handleDelete = async (id) => {
-    await axios.delete(`${API_URL}${id}/`)
-    fetchDepartments()
+    const token = localStorage.getItem('access');
+    try {
+      if (window.confirm("Are you sure you want to delete this department?")) {
+        await axios.delete(`${API_URL}${id}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+      }
+      fetchDepartments()
+    } catch (error) {
+      console.error('Delete failed:', error.response || error.message)
+      alert('Failed to delete. Check console.')
+    }
   }
 
   return (
