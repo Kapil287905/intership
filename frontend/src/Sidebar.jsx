@@ -88,7 +88,7 @@ const Sidebar = () => {
                             </a>
                         </li>               
                         <li className="mb-2">
-                            <a href="/role" className="text-decoration-none text-white d-flex align-items-center" onClick={handleToggleOffcanvas}>
+                            <a href="/role" className="text-decoration-none text-white d-flex align-items-center">
                                 <i className="uil uil-users-alt fs-5"></i>
                                 <span className="link-name ms-3">Role</span>
                             </a>
