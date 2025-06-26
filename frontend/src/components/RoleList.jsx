@@ -26,8 +26,20 @@ const RoleListPage = () => {
   }, [])
 
   const handleDelete = async (id) => {
-    await axios.delete(`${API_URL}${id}/`)
-    fetchRoles()
+    const token = localStorage.getItem('access');
+    try {
+      if (window.confirm("Are you sure you want to delete this department?")) {
+        await axios.delete(`${API_URL}${id}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+      }
+      fetchRoles()
+    } catch (error) {
+      console.error('Delete failed:', error.response || error.message)
+      alert('Failed to delete. Check console.')
+    }
   }
 
   return (
@@ -48,21 +60,23 @@ const RoleListPage = () => {
         <thead className="table-dark">
           <tr>
             <th style={{width:'5%'}}>Sr.No</th>
-            <th style={{width:'85%'}}>Role Name</th>       
+            <th style={{width:'40%'}}>Role Name</th>
+            <th style={{width:'45%'}}>Description</th>        
             <th style={{width:'5%'}}>Edit</th>
             <th style={{width:'5%'}}>Delete</th>
           </tr>
         </thead>
         <tbody>
           {Roles.map((role, index) => (
-            <tr key={role.id}>
+            <tr key={role.role_id}>
               <td>{index + 1}</td>
-              <td>{role.role}</td>
+              <td>{role.role_name}</td>
+              <td>{role.description}</td>
               <td>
-                <Link to={`/editrole/${role.id}`} className="btn btn-warning btn-sm me-2"><i className="uil uil-edit-alt"></i></Link>
+                <Link to={`/editrole/${role.role_id}`} className="btn btn-warning btn-sm me-2"><i className="uil uil-edit-alt"></i></Link>
               </td>
               <td>
-                <button onClick={() => handleDelete(role.id)} className="btn btn-danger btn-sm"><i className="uil uil-trash-alt"></i></button>
+                <button onClick={() => handleDelete(role.role_id)} className="btn btn-danger btn-sm"><i className="uil uil-trash-alt"></i></button>
               </td>
             </tr>
           ))}

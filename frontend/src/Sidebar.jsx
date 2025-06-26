@@ -54,15 +54,13 @@ const Sidebar = () => {
                                 <i className="uil uil-building"></i>
                                 <span className="link-name ms-2">Departments</span>
                             </a>
-                        </li>
-                        {/* comment                        
+                        </li>                                              
                         <li className="mb-2">
                             <a href="/role" className="text-decoration-none text-white d-flex align-items-center" onClick={handleToggleOffcanvas}>
                                 <i className="uil uil-users-alt fs-5"></i>
                                 <span className="link-name ms-3">Role</span>
                             </a>
-                        </li> 
-                        */}                        
+                        </li>                     
                     </ul>
                     <ul className="logout-mode navbar-nav">
                         {/* You can add a logout button or mode toggle here */}
@@ -88,15 +86,13 @@ const Sidebar = () => {
                                 <i className="uil uil-building fs-5"></i>
                                 <span className="link-name ms-3">Departments</span>
                             </a>
-                        </li>                        
-                        {/* comment                        
+                        </li>               
                         <li className="mb-2">
                             <a href="/role" className="text-decoration-none text-white d-flex align-items-center" onClick={handleToggleOffcanvas}>
                                 <i className="uil uil-users-alt fs-5"></i>
                                 <span className="link-name ms-3">Role</span>
                             </a>
-                        </li> 
-                        */}                       
+                        </li>                    
                     </ul>
 
                     <ul className="logout-mode list-unstyled mt-auto">

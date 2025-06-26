@@ -4,18 +4,14 @@ import axios from 'axios';
 
 const API_URL = 'https://intership.pythonanywhere.com/api/role/'
 
-const RoleFormPage = () => {
-  const [role, setRole] = useState('');
-  const [message, setMessage] = useState('');
+const RoleFormPage = () => {  
   const navigate = useNavigate();
   const { id } = useParams(); // id is present if it's edit
 
-  const ROLE_CHOICES = [
-    { value: 'admin', label: 'Admin' },
-    { value: 'manager', label: 'Manager' },
-    { value: 'team_leader', label: 'Team-Leader' },
-    { value: 'employee', label: 'Employee' },
-  ];
+  const [role, setRole] = useState({
+    role_name: '',
+    description: '',
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('access');
@@ -27,7 +23,7 @@ const RoleFormPage = () => {
         }
       })
       .then((res) => {
-        setRole(res.data.role);
+        setRole(res.data);
       })
       .catch((err) => {
         console.error('Error fetching role:', err);
@@ -39,7 +35,8 @@ const RoleFormPage = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('access'); 
+    const token = localStorage.getItem('access');
+
     try {
       const config = {
         headers: {
@@ -47,22 +44,23 @@ const RoleFormPage = () => {
         },
       };
 
-      if (id) {        
+      const data = {
+        role_name: role.role_name,
+        description: role.description,
+      };
+
+      if (id) {
         // Edit mode
-        await axios.put(`${API_URL}${id}/`, {
-          role
-        }, config);
+        await axios.put(`${API_URL}${id}/`, data, config);
       } else {
         // Create mode
-        await axios.post(`${API_URL}`, {
-          role
-        }, config);
+        await axios.post(`${API_URL}`, data, config);
       }
 
       navigate('/role');
     } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Unauthorized or submission error. Check token and permissions.');
+      console.error('Error submitting form:', error.response?.data || error.message);
+      alert('Submission failed. Check token, form data, or permissions.');
     }
   };
 
@@ -75,19 +73,27 @@ const RoleFormPage = () => {
     <div className="card">
       <div className="card-body">
         <form onSubmit={handleSubmit}>
-          <div className="form-group mb-3">
-            <label>Select Role:</label>
-            <select
-              className="form-control"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              required
-            >
-              <option value="">-- Select Role --</option>
-              {ROLE_CHOICES.map(r => (
-                <option key={r.value} value={r.value}>{r.label}</option>
-              ))}
-            </select>
+          <div className="mb-3">
+            <label className="form-label">Role Name</label>
+            <input
+            type="text"
+            name="role_name"
+            className="form-control"
+            value={role.role_name}
+            onChange={(e) => setRole({ ...role, role_name: e.target.value })}
+            required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Description</label>
+            <input
+            type="text"
+            name="description"
+            className="form-control"
+            value={role.description}
+            onChange={(e) => setRole({ ...role, description: e.target.value })}
+            required
+            />
           </div>
           <button type="submit" className="btn btn-primary">
             {id ? 'Update' : 'Add'} Role
@@ -100,5 +106,3 @@ const RoleFormPage = () => {
 };
 
 export default RoleFormPage;
-
-

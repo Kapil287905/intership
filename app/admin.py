@@ -12,7 +12,8 @@ class DepartmentAdmin(admin.ModelAdmin):
 # Role
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'role')
+    list_display = ('role_id', 'role_name', 'created_at', 'updated_at')
+    search_fields = ('dept_name',)
 
 
 # Custom User (Extend Django Admin)
