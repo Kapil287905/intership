@@ -22,7 +22,7 @@ class Role(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return self.role
+        return self.role_name
     
 class CustomUser(AbstractUser):
     phone = models.CharField(max_length=15, blank=True)
