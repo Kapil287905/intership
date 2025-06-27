@@ -1,8 +1,12 @@
 # department/urls.py
 
-from django.urls import path
+from django.urls import path,include
 from . import views
-from .views import MyTokenObtainPairView
+from .views import MyTokenObtainPairView,CustomUserViewSet
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'users', CustomUserViewSet, basename='customuser')
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -11,4 +15,7 @@ urlpatterns = [
     path('api/departments/<int:pk>/', views.department_detail, name='department-detail'),
     path('api/role/', views.RoleListCreateView.as_view(), name='role-list-create'),
     path('api/role/<int:pk>/', views.RoleDetailView.as_view(), name='role-detail'),
+
+    # ✅ Add DRF router URLs
+    path('api/', include(router.urls)),
 ]

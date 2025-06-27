@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-const API_URL = 'https://intership.pythonanywhere.com/api/departments/'
+const API_URL = 'http://127.0.0.1:8000/api/departments/'
 
 const DepartmentListPage = () => {
   const [departments, setDepartments] = useState([])
@@ -29,7 +29,7 @@ const DepartmentListPage = () => {
   const handleDelete = async (id) => {
     const token = localStorage.getItem('access');
     try {
-      if (window.confirm("Are you sure you want to delete this department?")) {
+      if (window.confirm("Are you sure you want to delete this role?")) {
         await axios.delete(`${API_URL}${id}/`, {
           headers: {
             Authorization: `Bearer ${token}`

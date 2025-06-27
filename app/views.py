@@ -7,6 +7,7 @@ from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .models import Role
 from .models import Department
+from .models import CustomUser
 from .serializers import DepartmentSerializer
 from django.http import JsonResponse
 from .serializers import RoleSerializer
@@ -14,7 +15,25 @@ from .serializers import RoleSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
+from rest_framework import viewsets
+from rest_framework.permissions import IsAdminUser, SAFE_METHODS, BasePermission
+from .serializers import UserSerializer
+
+# ✅ Custom permission class
+class IsAdminOrReadOnly(BasePermission):
+    """
+    - Allow GET, HEAD, OPTIONS to anyone authenticated.
+    - Only allow admin users to POST, PUT, DELETE.
+    """
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return request.user and request.user.is_authenticated
+        return request.user and request.user.is_staff  # Only admin (is_staff=True)
+
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all().order_by('-created_at')
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

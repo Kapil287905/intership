@@ -8,6 +8,9 @@ import RoleListPage from './components/RoleList';
 import RoleFormPage from './components/RoleForm';
 import Login from './components/login';
 
+import UserListPage from './components/UserList';
+import UserForm from './components/UserForm';
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access'));
   const username = localStorage.getItem('username');
@@ -51,6 +54,9 @@ function App() {
             <Route path="/role" element={<RoleListPage />} />
             <Route path="/roleadd" element={<RoleFormPage />} />
             <Route path="/editrole/:id" element={<RoleFormPage />} />
+            <Route path="/user" element={<UserListPage />} />
+            <Route path="/usersadd" element={<UserForm />} />
+            <Route path="/usersedit/:id" element={<UserForm />} />
           </Routes>
         </div>
       </div>
