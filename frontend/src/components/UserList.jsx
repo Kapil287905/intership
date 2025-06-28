@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-const API_URL = 'https://intership.pythonanywhere.com/api/users/'
+const API_URL = 'intership.pythonanywhere.comapi/users/'
 
 const UserListPage = () => {
   const [User, setUser] = useState([])
+  const userRole = localStorage.getItem("role");
   
 
   const fetchUser = async () => {
@@ -54,7 +55,9 @@ const UserListPage = () => {
         </div>
       </div>
       <div className='col-xl-6'>
+        {userRole === "Admin" && (
         <a href="/usersadd"><button className='btn btn-success' style={{marginTop:'2px',float:'right'}}><i className="uil uil-plus fs-5"></i> Create Employee</button></a>
+        )}
       </div>
     </div>
     <div className="table-responsive">
@@ -69,9 +72,13 @@ const UserListPage = () => {
             <th style={{width:'10%'}}>Depaetment</th>
             <th style={{width:'10%'}}>Role</th>
             <th style={{width:'15%'}}>Reporting manager</th>
-            <th style={{width:'10%'}}>Username</th>           
-            <th style={{width:'5%'}}>Edit</th>
-            <th style={{width:'5%'}}>Delete</th>
+            <th style={{width:'10%'}}>Username</th>
+            {userRole === "Admin" && (
+              <>           
+                <th style={{width:'5%'}}>Edit</th>
+                <th style={{width:'5%'}}>Delete</th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -86,12 +93,16 @@ const UserListPage = () => {
               <td>{user.role_name}</td>
               <td>{user.reporting_manager_name}</td>
               <td>{user.username}</td>
-              <td>
-                <Link to={`/usersedit/${user.employee_id}`} className="btn btn-warning btn-sm me-2"><i className="uil uil-edit-alt"></i></Link>
-              </td>
-              <td>
-                <button onClick={() => handleDelete(user.employee_id)} className="btn btn-danger btn-sm"><i className="uil uil-trash-alt"></i></button>
-              </td>
+              {userRole === "Admin" && (
+                <> 
+                  <td>
+                    <Link to={`/usersedit/${user.employee_id}`} className="btn btn-warning btn-sm me-2"><i className="uil uil-edit-alt"></i></Link>
+                  </td>
+                  <td>
+                    <button onClick={() => handleDelete(user.employee_id)} className="btn btn-danger btn-sm"><i className="uil uil-trash-alt"></i></button>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>

@@ -10,6 +10,11 @@ import Login from './components/login';
 
 import UserListPage from './components/UserList';
 import UserForm from './components/UserForm';
+import ForgotPasswordOTP from './components/ForgotPasswordOTP';
+import OTPSubmit from './components/OTPSubmit';
+import ResetPass from './components/ResetPassword'
+import axios from 'axios';
+axios.defaults.withCredentials = true; 
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('access'));
@@ -57,6 +62,9 @@ function App() {
             <Route path="/user" element={<UserListPage />} />
             <Route path="/usersadd" element={<UserForm />} />
             <Route path="/usersedit/:id" element={<UserForm />} />
+            <Route path="/Forgotpass" element={<ForgotPasswordOTP />} />
+            <Route path="/otpverify" element={<OTPSubmit />} />
+            <Route path="/Resetpass" element={<ResetPass />} />
           </Routes>
         </div>
       </div>

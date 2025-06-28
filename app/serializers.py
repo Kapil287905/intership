@@ -54,14 +54,23 @@ class UserSerializer(serializers.ModelSerializer):
         sender = settings.EMAIL_HOST_USER
         password = settings.EMAIL_HOST_PASSWORD
         receiver = user.email
+        reset_url = f"https://friendly-stroopwafel-cd03eb.netlify.app/Resetpass"
 
         msg = EmailMessage()
         msg.set_content(
-            f"Hello {user.first_name},\n\n"
-            f"🎉 Welcome to HRM Portal!\n\n"
-            f"Your username is: {user.username}\n"
-            f"Please use the reset link to set your password.\n\n"
-            f"Regards,\nHRM Team"
+           f"""
+                <html>
+                    <body>
+                        <p>Hello <strong>{user.first_name}</strong>,</p>
+                        <p>"🎉 Welcome to HRM Portal!</p>
+                        <p>"Your username is: {user.username}"</p>
+                        <p>"Please use the reset link to set your password."</p>
+                        <p><a href="{reset_url}" style="padding:10px 20px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">
+                            Click to Reset Password</a></p>
+                        <p>Regards,<br>HRM Team</p>
+                    </body>
+                </html>
+            """, subtype='html'            
         )
         msg["Subject"] = "🎉 Welcome to HRM Portal"
         msg["From"] = sender
