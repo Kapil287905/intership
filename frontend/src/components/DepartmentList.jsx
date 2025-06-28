@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-const API_URL = 'http://127.0.0.1:8000/api/departments/'
+const API_URL = 'https://intership.pythonanywhere.com/api/departments/'
 
 const DepartmentListPage = () => {
   const [departments, setDepartments] = useState([])
