@@ -13,7 +13,7 @@ function ResetPass() {
     try {
       const username = localStorage.getItem("username");
 
-      const res = await axios.post('https://intership.pythonanywhere.com/api/reset-password/', {
+      const res = await axios.post('http://127.0.0.1:8000/api/reset-password/', {
         username,
         password,
         confirm_password: confirm

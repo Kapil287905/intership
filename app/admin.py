@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Department, Role, CustomUser, Task, Performance, Leave
+from .models import Department, Role, CustomUser, Task,TaskAssignment, Performance, Leave
 
 # Register your models here.
 @admin.register(Department)
@@ -62,9 +62,23 @@ class CustomUserAdmin(BaseUserAdmin):
 # Task
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'assigned_to', 'assigned_by', 'status', 'deadline')
-    search_fields = ('title', 'assigned_to__username')
-    list_filter = ('status', 'deadline')
+    list_display = ['id', 'task_title', 'end_date']  # ✅ Use existing fields
+    list_filter = ['task_priority', 'end_date']  # ✅ Use correct fields only
+    search_fields = ['task_title', 'task_description']
+
+@admin.register(TaskAssignment)
+class TaskAssignmentAdmin(admin.ModelAdmin):
+    list_display = [
+        'assignment_id',
+        'task',
+        'employee',         # This will show CustomUser username
+        'assigned_by',      # This will show assigner's username
+        'status',
+        'assigned_date',
+        'completed_at',
+    ]
+    list_filter = ['status', 'assigned_date', 'completed_at']
+    search_fields = ['task__task_title', 'employee__username', 'assigned_by__username']
 
 
 # Performance

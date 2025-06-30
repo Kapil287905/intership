@@ -13,6 +13,10 @@ import UserForm from './components/UserForm';
 import ForgotPasswordOTP from './components/ForgotPasswordOTP';
 import OTPSubmit from './components/OTPSubmit';
 import ResetPass from './components/ResetPassword'
+import TaskListPage from './components/TaskList';
+import TaskForm from './components/TaskForm';
+import TaskDetailsPage from './components/TaskDetailsPage';
+
 import axios from 'axios';
 axios.defaults.withCredentials = true; 
 
@@ -65,6 +69,10 @@ function App() {
             <Route path="/Forgotpass" element={<ForgotPasswordOTP />} />
             <Route path="/otpverify" element={<OTPSubmit />} />
             <Route path="/Resetpass" element={<ResetPass />} />
+            <Route path="/task" element={<TaskListPage />} />
+            <Route path="/taskadd" element={<TaskForm />} />
+            <Route path="/taskedit/:id" element={<TaskForm />} />
+            <Route path="/taskdetails/:id" element={<TaskDetailsPage />} />
           </Routes>
         </div>
       </div>

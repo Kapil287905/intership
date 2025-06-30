@@ -12,7 +12,7 @@ const ForgotPasswordOTP = () => {
     e.preventDefault();    
     try {
        const response = await axios.post(
-            'https://intership.pythonanywhere.com/api/otp-request/',
+            'http://127.0.0.1:8000/api/otp-request/',
             { email },
             { withCredentials: true } // ✅ VERY IMPORTANT for Django session
         );

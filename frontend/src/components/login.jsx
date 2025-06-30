@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  localStorage.removeItem('access');
+  localStorage.removeItem('refresh');
+  localStorage.removeItem('username');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -10,7 +13,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://intership.pythonanywhere.com/api/token/', {
+      const response = await axios.post('http://127.0.0.1:8000/api/token/', {
         username,
         password,
       });
@@ -46,8 +49,8 @@ function Login() {
             </div>
             <button type="submit" className="btn btn-primary w-100">Login</button>
           </form>
-          <div class="text-center mt-3 mb-3 p-t-12">						
-						<a class="txt2" href="/Forgotpass">
+          <div className="text-center mt-3 mb-3 p-t-12">						
+						<a className="txt2" href="/Forgotpass">
 							Forgot Password?
 						</a>
 					</div>

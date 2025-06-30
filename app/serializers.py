@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Department,Role,CustomUser,Task,Performance,Leave
+from .models import Department,Role,CustomUser,Task,TaskAssignment,Performance,Leave
 
 from django.urls import reverse
 from django.contrib.auth.tokens import default_token_generator
@@ -10,6 +10,10 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 from django.conf import settings
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,7 +58,7 @@ class UserSerializer(serializers.ModelSerializer):
         sender = settings.EMAIL_HOST_USER
         password = settings.EMAIL_HOST_PASSWORD
         receiver = user.email
-        reset_url = f"https://friendly-stroopwafel-cd03eb.netlify.app/Resetpass"
+        reset_url = f"http://localhost:5173/Resetpass"
 
         msg = EmailMessage()
         msg.set_content(
@@ -71,7 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
                     </body>
                 </html>
             """, subtype='html'            
-        )
+        )        
         msg["Subject"] = "🎉 Welcome to HRM Portal"
         msg["From"] = sender
         msg["To"] = receiver
@@ -96,13 +100,57 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
         
+class AssignedUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email']
+
+class TaskAssignmentSerializer(serializers.ModelSerializer):
+    employee = AssignedUserSerializer(read_only=True)
+    assigned_by = AssignedUserSerializer(read_only=True)
+
+    class Meta:
+        model = TaskAssignment
+        fields = ['employee', 'assigned_by', 'assigned_date', 'status', 'completed_at']
+
 class TaskSerializer(serializers.ModelSerializer):
-    assigned_to_username = serializers.CharField(source='assigned_to.username', read_only=True)
-    assigned_by_username = serializers.CharField(source='assigned_by.username', read_only=True)
+    assigned_to = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), write_only=True, required=True
+    )
+    assignment = TaskAssignmentSerializer(source='assignments', many=True, read_only=True)
 
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = [
+            'id',
+            'task_title',
+            'task_description',
+            'task_priority',
+            'task_type',
+            'start_date',
+            'end_date',
+            'assigned_to',  # For creation
+            'assignment'    # For viewing assignment info
+        ]
+
+    def create(self, validated_data):
+        assigned_user = validated_data.pop('assigned_to')
+        task = Task.objects.create(**validated_data)
+        TaskAssignment.objects.create(
+            task=task,
+            employee=assigned_user,
+            assigned_by=self.context['request'].user,
+            status='Pending'
+        )
+        return task
+    
+class TaskAssignmentSerializer(serializers.ModelSerializer):
+    employee = UserSerializer(read_only=True)
+    assigned_by = UserSerializer(read_only=True)
+
+    class Meta:
+        model = TaskAssignment
+        fields = ['id', 'employee', 'assigned_by', 'assigned_date', 'status', 'completed_at']
 
 class PerformanceSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)

@@ -60,6 +60,18 @@ const Sidebar = () => {
                                 <i className="uil uil-users-alt fs-5"></i>
                                 <span className="link-name ms-3">Role</span>
                             </a>
+                        </li>
+                        <li className="mb-2">
+                            <a href="/user" className="text-decoration-none text-white d-flex align-items-center" onClick={handleToggleOffcanvas}>
+                                <i className="uil uil-users-alt fs-5"></i>
+                                <span className="link-name ms-3">user</span>
+                            </a>
+                        </li>
+                        <li className="mb-2">
+                            <a href="/task" className="text-decoration-none text-white d-flex align-items-center" onClick={handleToggleOffcanvas}>
+                                <i className="uil uil-users-alt fs-5"></i>
+                                <span className="link-name ms-3">Task</span>
+                            </a>
                         </li>                        
                     </ul>
                     <ul className="logout-mode navbar-nav">
@@ -97,6 +109,12 @@ const Sidebar = () => {
                             <a href="/user" className="text-decoration-none text-white d-flex align-items-center">
                                 <i className="uil uil-users-alt fs-5"></i>
                                 <span className="link-name ms-3">user</span>
+                            </a>
+                        </li>
+                        <li className="mb-2">
+                            <a href="/task" className="text-decoration-none text-white d-flex align-items-center">
+                                <i className="uil uil-users-alt fs-5"></i>
+                                <span className="link-name ms-3">Task</span>
                             </a>
                         </li>                        
                     </ul>

@@ -88,48 +88,50 @@ class Performance(models.Model):
     def __str__(self):
         return f"Review of {self.user.username} by {self.reviewer.username if self.reviewer else 'N/A'} - Score: {self.score}"
     
+
 class Task(models.Model):
+    PRIORITY_CHOICES = [
+        ('High', 'High'),
+        ('Medium', 'Medium'),
+        ('Low', 'Low'),
+    ]
+    TASK_TYPE_CHOICES = [
+        ('Individual', 'Individual'),
+        ('Team', 'Team'),
+    ]
+
+    task_title = models.CharField(max_length=100,default='')
+    task_description = models.CharField(max_length=300, default='')
+    task_priority = models.CharField(max_length=200, choices=PRIORITY_CHOICES,default='')
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField()
+    task_type = models.CharField(max_length=50, choices=TASK_TYPE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.task_title
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+class TaskAssignment(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
         ('In Progress', 'In Progress'),
         ('Completed', 'Completed'),
     ]
 
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    
-    assigned_to = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='tasks',
-        help_text="Employee who is assigned this task."
-    )
-    assigned_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='assigned_tasks',
-        help_text="Manager or supervisor who assigned the task."
-    )
-    
-    deadline = models.DateField()
-    
-    status = models.CharField(
-        max_length=50,
-        choices=STATUS_CHOICES,
-        default='Pending',
-        help_text="Current status of the task."
-    )
-
-    created_at = models.DateTimeField(auto_now_add=True)
+    assignment_id = models.AutoField(primary_key=True)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='assignments')
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='task_assignments')
+    assigned_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='assigned_tasks')
+    assigned_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=200, choices=STATUS_CHOICES, default='Pending')
+    completed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.title} → {self.assigned_to.username}"
-
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name = "Task"
-        verbose_name_plural = "Tasks"
+        return f"{self.task.task_title} → {self.employee.username}"
     
 class Leave(models.Model):
     LEAVE_TYPES = [

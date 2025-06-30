@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-a_3099ju1tliilzd*mm=x_r#fkw*--p7(c3!0tp82tum9mo6)j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['intership.pythonanywhere.com/']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -82,11 +82,11 @@ ROOT_URLCONF = 'departmentmanagement.urls'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "https://friendly-stroopwafel-cd03eb.netlify.app/",
+    "http://localhost:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://friendly-stroopwafel-cd03eb.netlify.app/",
+    "http://localhost:5173",
 ]
 
 SESSION_COOKIE_SECURE = True

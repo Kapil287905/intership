@@ -3,7 +3,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import generics
+from rest_framework import generics,permissions
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .models import Role
 from .models import Department
@@ -11,6 +11,8 @@ from .models import CustomUser
 from .serializers import DepartmentSerializer
 from django.http import JsonResponse
 from .serializers import RoleSerializer
+from .models import Task,TaskAssignment
+from .serializers import TaskSerializer
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -32,6 +34,7 @@ from email.message import EmailMessage
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.utils.timezone import now
 
 
 # ✅ Custom permission class
@@ -174,8 +177,10 @@ User = get_user_model()
 
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from rest_framework.permissions import AllowAny
 
 class OTPRequestView(APIView):
+    permission_classes = [AllowAny]  # ✅ Required for public access
     def post(self, request):
         request.session.modified = True
         uemail = request.data.get("email")
@@ -235,6 +240,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class OTPVerifyView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         otp = request.data.get("otp")
 
@@ -293,3 +299,56 @@ from django.middleware.csrf import get_token
 
 def get_csrf_token(request):
     return JsonResponse({'csrfToken': get_token(request)})
+
+
+class TaskListCreateView(generics.ListCreateAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Task.objects.all()
+
+        # If employee_id is passed in query params, filter by it
+        employee_id = self.request.query_params.get('employee')
+        if employee_id:
+            return queryset.filter(assignment__employee__id=employee_id).distinct()
+        
+        status = self.request.query_params.get('status')
+        if status:
+            queryset = queryset.filter(assignment__status=status)
+
+        # Admin sees all tasks
+        if hasattr(user, 'role') and user.role.role_name == 'Admin':
+            return queryset
+
+        # Others (like employee) see tasks assigned to them
+        assigned_task_ids = TaskAssignment.objects.filter(employee=user).values_list('task_id', flat=True)
+        return queryset.filter(pk__in=assigned_task_ids).distinct()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print("❌ Serializer Errors:", serializer.errors)  # log in console
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def mark_task_complete(request, assignment_id):
+    try:
+        assignment = TaskAssignment.objects.get(pk=assignment_id)
+        assignment.status = 'Completed'
+        assignment.completed_at = now()
+        assignment.save()
+        return Response({"message": "Task marked as completed successfully"})
+    except TaskAssignment.DoesNotExist:
+        return Response({"error": "Assignment not found"}, status=404)
