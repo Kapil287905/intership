@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-const API_URL = 'http://127.0.0.1:8000/api/tasks/'
+const API_URL = 'https://intership.pythonanywhere.com/api/tasks/'
 
 const TaskListPage = () => {
   const [Task, setTask] = useState([])
@@ -52,7 +52,7 @@ const TaskListPage = () => {
   const fetchEmployees = async () => {
     const token = localStorage.getItem('access');
     const loggedInUserId = localStorage.getItem('employee_id');
-    const res = await axios.get('http://127.0.0.1:8000/api/users/', {
+    const res = await axios.get('https://intership.pythonanywhere.com/api/users/', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const filtered = res.data.filter(emp => emp.employee_id !== parseInt(loggedInUserId));
@@ -86,7 +86,7 @@ const TaskListPage = () => {
     try {
       const token = localStorage.getItem('access');
       await axios.patch(
-        `http://127.0.0.1:8000/api/task-assignments/${id}/complete/`,
+        `https://intership.pythonanywhere.com/api/task-assignments/${id}/complete/`,
         {},
         {
           headers: {

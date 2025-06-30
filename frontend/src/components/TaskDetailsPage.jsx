@@ -9,7 +9,7 @@ const TaskDetailsPage = () => {
   useEffect(() => {
     const fetchTask = async () => {
       const token = localStorage.getItem('access');
-      const response = await axios.get(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+      const response = await axios.get(`https://intership.pythonanywhere.com/api/tasks/${id}/`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

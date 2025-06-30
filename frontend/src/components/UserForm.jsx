@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const API = 'http://127.0.0.1:8000/api/users/'; // Adjust if needed
-const DEPARTMENTS_API = 'http://127.0.0.1:8000/api/departments/';
-const ROLES_API = 'http://127.0.0.1:8000/api/role/';
+const API = 'https://intership.pythonanywhere.com/api/users/'; // Adjust if needed
+const DEPARTMENTS_API = 'https://intership.pythonanywhere.com/api/departments/';
+const ROLES_API = 'https://intership.pythonanywhere.com/api/role/';
 
 const UserForm = () => {
   const { id } = useParams(); // for edit mode

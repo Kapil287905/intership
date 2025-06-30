@@ -11,7 +11,7 @@ function OTPSubmit() {
   const verifyOTP = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/otp-verify/', {
+      const response = await axios.post('https://intership.pythonanywhere.com/api/otp-verify/', {
         otp
       });
 

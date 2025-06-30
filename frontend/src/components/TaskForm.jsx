@@ -27,7 +27,7 @@ const TaskForm = ({ onSuccess }) => {
     const token = localStorage.getItem('access');
     
     if (id) {
-      axios.get(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+      axios.get(`https://intership.pythonanywhere.com/api/tasks/${id}/`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -67,7 +67,7 @@ const TaskForm = ({ onSuccess }) => {
     const loggedInUserId = localStorage.getItem('employee_id');
     
     try {      
-      const response = await axios.get('http://127.0.0.1:8000/api/users/', {
+      const response = await axios.get('https://intership.pythonanywhere.com/api/users/', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -98,13 +98,13 @@ const TaskForm = ({ onSuccess }) => {
     try {
         const token = localStorage.getItem('access'); // assuming you store it here
         if (isEdit) {
-            await axios.put(`http://127.0.0.1:8000/api/tasks/${id}/`, form, {
+            await axios.put(`https://intership.pythonanywhere.com/api/tasks/${id}/`, form, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
             });
         }else{
-            await axios.post('http://127.0.0.1:8000/api/tasks/', form, {
+            await axios.post('https://intership.pythonanywhere.com/api/tasks/', form, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }        
